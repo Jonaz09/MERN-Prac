@@ -23,6 +23,35 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+app.post("/student", async (req, res) => {
+  const student = new Student(req, body);
+  await student.save();
+  res.json(student);
+});
+
+app.delete("/student/:id", async (req, res) => {
+  try {
+    const deletedStudent = await Student.findByIdAndDelete(req.params.id);
+    res.json(deletedStudent);
+  } catch (err) {
+    res.status(400).json({ message: "Failed to delete student" });
+  }
+});
+
+
+app.put("/student/:id", async (req, res) => {
+  try {
+    const updatedStudent = await Student.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updatedStudent);
+  } catch (err) {
+    res.status(400).json({ message: "Failed to update student" });
+  }
+});
+
 app.get("/student", async (req, res) => {
   try {
     const students = await Student.find();
